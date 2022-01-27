@@ -1,27 +1,25 @@
-import { Button, Typography } from "antd";
-import { useEffect, useState } from "react";
+import { Button, Typography, Input } from "antd";
+import { useState } from "react";
+import { v4 } from "uuid";
 
+const PHONE = process.env.NEXT_PUBLIC_PHONE;
 const { Title } = Typography;
 
 export default function Home() {
-  const id = useCode();
+  const [code] = useState(makeCode);
+  const [id, setId] = useState(v4);
 
   return (
     <div>
-      <Title>{id}</Title>
-      <Button href={`tel:+16067320851,${id}#`}>Click to Connect</Button>
+      <h2>{code}</h2>
+      <Input value={id} />
+      <Button href={`tel:${PHONE},${id}#`}>Click to Connect</Button>
     </div>
   );
 }
 
-function useCode() {
-  const [id, setId] = useState("");
-  useEffect(() => {
-    for (var i = 0, str = ""; i < 6; i++)
-      str += "0123456789"[Math.floor(Math.random() * 10)];
-
-    setId(str);
-  }, []);
-
-  return id;
+function makeCode() {
+  for (var i = 0, str = ""; i < 6; i++)
+    str += "0123456789"[Math.floor(Math.random() * 10)];
+  return str;
 }

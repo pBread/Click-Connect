@@ -3,6 +3,7 @@ declare global {
     interface ProcessEnv {
       ACCOUNT_SID: string;
       AUTH_TOKEN: string;
+      NEXT_PUBLIC_PHONE: string;
       SYNC_SVC_SID: string;
     }
   }

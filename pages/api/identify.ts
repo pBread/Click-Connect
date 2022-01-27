@@ -1,7 +1,7 @@
 import type { NextApiHandler, NextApiRequest } from "next";
 import Twilio from "twilio";
 
-const { ACCOUNT_SID, CODE_SECRET, AUTH_TOKEN, SYNC_SVC_SID } = process.env;
+const { ACCOUNT_SID, AUTH_TOKEN, SYNC_SVC_SID } = process.env;
 const client = Twilio(ACCOUNT_SID, AUTH_TOKEN);
 
 const getHandler: NextApiHandler = async (req, res) => {
@@ -14,14 +14,14 @@ const getHandler: NextApiHandler = async (req, res) => {
       .syncMaps("CodeMap")
       .syncMapItems(id)
       .fetch()
-      .then((item) => item.data.code);
+      .then(({ data }) => data.code);
   else
     id = await client.sync
       .services(SYNC_SVC_SID)
       .syncMaps("CodeMap")
       .syncMapItems(code)
       .fetch()
-      .then((item) => item.data.id);
+      .then(({ data }) => data.id);
 
   res.json({ code, id });
 };
@@ -31,22 +31,16 @@ const postHandler: NextApiHandler = async (req, res) => {
   const id = getId(req);
 
   await Promise.all([
-    client.sync
-      .services(SYNC_SVC_SID)
-      .syncMaps("CodeMap")
-      .syncMapItems.create({
-        data: { code, id },
-        key: id,
-        ttl: 60 * 60, // seconds
-      }),
-    client.sync
-      .services(SYNC_SVC_SID)
-      .syncMaps("CodeMap")
-      .syncMapItems.create({
-        data: { code, id },
-        key: code,
-        ttl: 60 * 60, // seconds
-      }),
+    client.sync.services(SYNC_SVC_SID).syncMaps("CodeMap").syncMapItems.create({
+      data: { code, id },
+      key: id,
+      ttl: 3600, // seconds
+    }),
+    client.sync.services(SYNC_SVC_SID).syncMaps("CodeMap").syncMapItems.create({
+      data: { code, id },
+      key: code,
+      ttl: 3600, // seconds
+    }),
   ]);
 
   res.status(200).end();
@@ -71,11 +65,6 @@ function getCode(req: NextApiRequest) {
   return req.query.code || req.body?.code;
 }
 
-function getId(req: NextApiRequest) {
-  return (
-    req.query.userId ||
-    req.query.anonymousId ||
-    req.body?.userId ||
-    req.body?.anonymousId
-  );
+function getId({ body, query }: NextApiRequest) {
+  return query.userId || query.anonymousId || body?.userId || body?.anonymousId;
 }
