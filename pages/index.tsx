@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 const { Title } = Typography;
 
 export default function Home() {
-  const id = useSessionId();
+  const id = useCode();
 
   return (
     <div>
@@ -14,7 +14,7 @@ export default function Home() {
   );
 }
 
-function useSessionId() {
+function useCode() {
   const [id, setId] = useState("");
   useEffect(() => {
     for (var i = 0, str = ""; i < 6; i++)
