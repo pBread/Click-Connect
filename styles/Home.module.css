@@ -1,10 +1,11 @@
-.container {
-  display: flex;
-  justify-content: space-around;
+.wrapper {
+  width: 400px;
 }
 
-.header {
+.wrapper > * {
+  margin-top: 16px;
 }
 
-.main {
+.wrapper input {
+  text-align: center !important;
 }
