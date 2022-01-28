@@ -1,7 +1,6 @@
 import { Button, Divider, Input } from "antd";
 import fetch from "isomorphic-fetch";
 import { useEffect, useState } from "react";
-import { v4 } from "uuid";
 import styles from "../styles/Home.module.css";
 
 const PHONE = process.env.NEXT_PUBLIC_PHONE;
