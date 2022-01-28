@@ -1,13 +1,23 @@
-import { Button, Input, Divider } from "antd";
-import { useState } from "react";
+import { Button, Divider, Input } from "antd";
+import fetch from "isomorphic-fetch";
+import { useEffect, useState } from "react";
 import { v4 } from "uuid";
 import styles from "../styles/Home.module.css";
 
 const PHONE = process.env.NEXT_PUBLIC_PHONE;
 
 export default function Home() {
-  const [code] = useState(makeCode);
-  const [id, setId] = useState(v4);
+  const [code] = useState(makeCode());
+  const [id, setId] = useState(v4());
+
+  useEffect(() => {
+    (async () =>
+      fetch("https://pbread.ngrok.io/api/identify", {
+        body: JSON.stringify({ code, id }),
+        headers: { "Content-type": "application/json" },
+        method: "POST",
+      }))();
+  }, [code, id]);
 
   return (
     <div className={styles.wrapper}>

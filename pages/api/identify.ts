@@ -4,49 +4,51 @@ import Twilio from "twilio";
 const { ACCOUNT_SID, AUTH_TOKEN, SYNC_SVC_SID } = process.env;
 const client = Twilio(ACCOUNT_SID, AUTH_TOKEN);
 
+/****************************************************
+ Get Handler
+****************************************************/
 const getHandler: NextApiHandler = async (req, res) => {
-  let code = getCode(req);
-  let id = getId(req);
+  const data = await client.sync
+    .services(SYNC_SVC_SID)
+    .syncMaps("CodeMap")
+    .syncMapItems(getCode(req) || getId(req))
+    .fetch()
+    .then(({ data }) => data as { code: string; id: string });
 
-  if (!code)
-    code = await client.sync
-      .services(SYNC_SVC_SID)
-      .syncMaps("CodeMap")
-      .syncMapItems(id)
-      .fetch()
-      .then(({ data }) => data.code);
-  else
-    id = await client.sync
-      .services(SYNC_SVC_SID)
-      .syncMaps("CodeMap")
-      .syncMapItems(code)
-      .fetch()
-      .then(({ data }) => data.id);
-
-  res.json({ code, id });
+  res.json(data);
 };
 
+/****************************************************
+ Post Handler
+****************************************************/
 const postHandler: NextApiHandler = async (req, res) => {
   const code = getCode(req);
   const id = getId(req);
+  const data = { code, id };
 
-  await Promise.all([
-    client.sync.services(SYNC_SVC_SID).syncMaps("CodeMap").syncMapItems.create({
-      data: { code, id },
-      key: id,
-      ttl: 3600, // seconds
-    }),
-    client.sync.services(SYNC_SVC_SID).syncMaps("CodeMap").syncMapItems.create({
-      data: { code, id },
-      key: code,
-      ttl: 3600, // seconds
-    }),
-  ]);
+  await Promise.all([setItem(code, data), setItem(id, data)]);
 
   res.status(200).end();
 };
 
-const handler: NextApiHandler = (req, res) => {
+async function setItem(key: string, data: object) {
+  await client.sync
+    .services(SYNC_SVC_SID)
+    .syncMaps("CodeMap")
+    .syncMapItems(key)
+    .remove()
+    .catch(() => {});
+
+  await client.sync
+    .services(SYNC_SVC_SID)
+    .syncMaps("CodeMap")
+    .syncMapItems.create({ data, key, ttl: 3600 });
+}
+
+/****************************************************
+ Route Handler
+****************************************************/
+const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
     case "GET":
       return getHandler(req, res);
@@ -61,10 +63,10 @@ export default handler;
 /****************************************************
  Helpers
 ****************************************************/
-function getCode(req: NextApiRequest) {
-  return req.query.code || req.body?.code;
+function getCode({ body, query }: NextApiRequest) {
+  return query.code || body.code;
 }
 
 function getId({ body, query }: NextApiRequest) {
-  return query.userId || query.anonymousId || body?.userId || body?.anonymousId;
+  return query.id || body.id;
 }
