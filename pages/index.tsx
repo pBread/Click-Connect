@@ -1,4 +1,4 @@
-import { Button, Divider, Input } from "antd";
+import { Button, Divider } from "antd";
 import axios from "axios";
 import { useState } from "react";
 import styles from "../styles/Home.module.css";
@@ -6,8 +6,8 @@ import styles from "../styles/Home.module.css";
 const PHONE = process.env.NEXT_PUBLIC_PHONE;
 
 export default function Home() {
-  const [code] = useState(randomDigits(6));
-  const [id, setId] = useState(`anon-${randomDigits(3)}`);
+  const [code] = useState(digits(6));
+  const [id] = useState(`anon-${digits(3)}`);
 
   return (
     <div className={styles.wrapper}>
@@ -17,18 +17,22 @@ export default function Home() {
       </div>
       <div>
         <h5>Identifier</h5>
-        <Input onChange={(ev) => setId(ev.target.value)} value={id} />
+        <h2>{id}</h2>
       </div>
+      <Divider />
+      <Button onClick={() => axios.post("/api/identify", { code, id })}>
+        <a href={`tel:${PHONE},${code}#`}>Click to Call</a>
+      </Button>
 
       <Divider />
       <Button onClick={() => axios.post("/api/identify", { code, id })}>
-        <a href={`tel:${PHONE},${code}#`}>Click to Connect</a>
+        <a href={`sms:${PHONE}&body=(${code}) Hello there!`}>Click to Text</a>
       </Button>
     </div>
   );
 }
 
-function randomDigits(count: number) {
+function digits(count: number) {
   for (var i = 0, str = ""; i < count; i++)
     str += "0123456789"[Math.floor(Math.random() * 10)];
 

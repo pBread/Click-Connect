@@ -1,9 +1,6 @@
 .wrapper {
+  padding-top: 16px;
   width: 400px;
-}
-
-.wrapper > * {
-  margin-top: 16px;
 }
 
 .wrapper input {
