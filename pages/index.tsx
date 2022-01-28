@@ -7,8 +7,8 @@ import styles from "../styles/Home.module.css";
 const PHONE = process.env.NEXT_PUBLIC_PHONE;
 
 export default function Home() {
-  const [code] = useState(makeCode());
-  const [id, setId] = useState(v4());
+  const [code] = useState(randomDigits(6));
+  const [id, setId] = useState(`anon-${randomDigits(3)}`);
 
   useEffect(() => {
     (async () =>
@@ -36,8 +36,8 @@ export default function Home() {
   );
 }
 
-function makeCode() {
-  for (var i = 0, str = ""; i < 6; i++)
+function randomDigits(count: number) {
+  for (var i = 0, str = ""; i < count; i++)
     str += "0123456789"[Math.floor(Math.random() * 10)];
 
   return str;
