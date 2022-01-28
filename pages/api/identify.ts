@@ -55,6 +55,10 @@ const handler: NextApiHandler = async (req, res) => {
 
     case "POST":
       return postHandler(req, res);
+
+    case "OPTIONS":
+      console.log("options ", req.rawHeaders);
+      res.status(200).end();
   }
 };
 
