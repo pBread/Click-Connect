@@ -1,8 +1,7 @@
 import { Button, Divider, Input } from "antd";
-import fetch from "isomorphic-fetch";
+import axios from "axios";
 import { useState } from "react";
 import styles from "../styles/Home.module.css";
-import axios from "axios";
 
 const PHONE = process.env.NEXT_PUBLIC_PHONE;
 
@@ -22,21 +21,11 @@ export default function Home() {
       </div>
 
       <Divider />
-      <Button
-        onClick={async () => {
-          await setSyncMap(code, id);
-        }}
-      >
-        <a href={`tel:${PHONE},${id}#`}> Click to Connect</a>
+      <Button onClick={() => axios.post("/api/identify", { code, id })}>
+        <a href={`tel:${PHONE},${code}#`}>Click to Connect</a>
       </Button>
     </div>
   );
-}
-
-function setSyncMap(code: string, id: string) {
-  console.log("setSyncMap");
-
-  return axios.post("/api/identify", { code, id });
 }
 
 function randomDigits(count: number) {
