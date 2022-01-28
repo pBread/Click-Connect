@@ -1,11 +1,9 @@
 {
   "dependencies": {
-    "@types/axios": "^0.14.0",
-    "@types/lodash": "^4.14.178",
-    "@types/uuid": "^8.3.4",
     "antd": "^4.18.5",
     "axios": "^0.25.0",
     "isomorphic-fetch": "^3.0.0",
+    "jsforce": "^1.11.0",
     "lodash": "^4.17.21",
     "next": "12.0.9",
     "react": "17.0.2",
@@ -13,11 +11,15 @@
     "twilio": "^3.73.1"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/isomorphic-fetch": "^0.0.35",
+    "@types/jsforce": "^1.9.38",
+    "@types/lodash": "^4.14.178",
     "@types/next": "^9.0.0",
     "@types/node": "17.0.12",
     "@types/react": "17.0.38",
     "@types/twilio": "^3.19.3",
+    "@types/uuid": "^8.3.4",
     "eslint": "8.7.0",
     "eslint-config-next": "12.0.9",
     "typescript": "4.5.5"

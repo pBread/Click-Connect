@@ -7,7 +7,7 @@ const client = Twilio(ACCOUNT_SID, AUTH_TOKEN);
 const handler: NextApiHandler = async (req, res) => {
   console.log("==api/debug/print==\n", req.body);
 
-  res.status(200).end();
+  res.json({});
 };
 
 export default handler;
