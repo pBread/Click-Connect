@@ -1,4 +1,4 @@
-import type { NextApiHandler, NextApiRequest } from "next";
+import type { NextApiHandler } from "next";
 import Twilio from "twilio";
 
 const { ACCOUNT_SID, AUTH_TOKEN, SYNC_SVC_SID } = process.env;
@@ -31,9 +31,9 @@ async function getItem(key: string) {
 /****************************************************
  Post Handler
 ****************************************************/
-const postHandler: NextApiHandler = async (req, res) => {
-  const code = getCode(req);
-  const id = getId(req);
+const postHandler: NextApiHandler = async ({ body }, res) => {
+  const code = body.code;
+  const id = body.id;
   const data = { code, id };
 
   await Promise.all([setItem(code, data), setItem(id, data)]);
@@ -66,14 +66,3 @@ const handler: NextApiHandler = async (req, res) => {
 };
 
 export default handler;
-
-/****************************************************
- Helpers
-****************************************************/
-function getCode({ body, query }: NextApiRequest) {
-  return query.code || body.code;
-}
-
-function getId({ body, query }: NextApiRequest) {
-  return query.id || body.id;
-}
