@@ -59,10 +59,16 @@ async function setItem(key: string, data: object) {
  Route Handler
 ****************************************************/
 const handler: NextApiHandler = async (req, res) => {
-  console.log("/api/identify==\n", req.method, req.body, req.query);
+  console.log("/api/identify==\n", {
+    method: req.method,
+    body: JSON.parse(JSON.stringify(req.body)),
+    query: req.query,
+  });
   if (req.method === "POST") return postHandler(req, res);
   else if (req.query.channel === "sms") return getIdSMS(req, res);
   else if (req.query.channel === "voice") return getIdVoice(req, res);
 };
 
 export default handler;
+
+//{{widgets.IdentifySMSUser.body}}

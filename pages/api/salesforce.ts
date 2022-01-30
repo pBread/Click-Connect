@@ -15,7 +15,7 @@ const handler: NextApiHandler = async (req, res) => {
   await conn.login(SF_USERNAME, `${SF_PASSWORD}${SF_TOKEN}`);
   const lead = (await conn
     .sobject("Lead")
-    .create({ Company: "N/A", LastName: id, MobilePhone: Phone })) as {
+    .create({ Company: "N/A", LastName: id, Phone, MobilePhone: Phone })) as {
     id: string;
   };
 
