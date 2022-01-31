@@ -89,5 +89,3 @@ const handler: NextApiHandler = async (req, res) => {
 };
 
 export default handler;
-
-//{{widgets.IdentifySMSUser.body}}
