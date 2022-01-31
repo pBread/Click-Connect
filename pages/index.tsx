@@ -1,10 +1,7 @@
-import { Button, Divider } from "antd";
+import { Button, Divider, Radio } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
-import { Radio } from "antd";
-
-const PHONE = process.env.NEXT_PUBLIC_PHONE;
 
 const phones = {
   simple: "+18106424565",
@@ -40,6 +37,7 @@ export default function Home() {
         </Radio.Group>
       </div>
 
+      {isAnon && <Divider />}
       {isAnon && (
         <div>
           <h5>Code</h5>
