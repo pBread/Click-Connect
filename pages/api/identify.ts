@@ -15,7 +15,10 @@ const getIdSMS: NextApiHandler = async ({ query }, res) => {
   const msg = query.body as string;
   const match = msg.match(/(\([0-9]{6}\))/);
 
-  if (!match) {
+  await conn.login(SF_USERNAME, `${SF_PASSWORD}${SF_TOKEN}`);
+  const contact = await conn.sobject("Contact").findOne({ Phone: query.from });
+
+  if (contact) {
     await conn.login(SF_USERNAME, `${SF_PASSWORD}${SF_TOKEN}`);
     const contact = await conn
       .sobject("Contact")
@@ -27,7 +30,8 @@ const getIdSMS: NextApiHandler = async ({ query }, res) => {
       identity: contact?.Id, // @ts-ignore
       name: contact?.FirstName,
     });
-  } else res.json(await getItem(match[0]?.replace(/\(|\)/g, "")));
+  } else if (match) res.json(await getItem(match[0]?.replace(/\(|\)/g, "")));
+  else res.status(500).end();
 };
 
 const getIdVoice: NextApiHandler = async ({ query }, res) => {
@@ -55,7 +59,10 @@ const postHandler: NextApiHandler = async ({ body }, res) => {
   const id = body.id;
   const data = { code, id };
 
-  await Promise.all([setItem(code, data), setItem(id, data)]);
+  await Promise.all([
+    setItem(code, data),
+    // setItem(id, data)
+  ]);
 
   res.status(200).end();
 };

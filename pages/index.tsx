@@ -12,13 +12,16 @@ const phones = {
 export default function Home() {
   const [code, setCode] = useState("");
   const [id, setId] = useState("");
+  const [phone, setPhone] = useState(phones.simple);
 
-  useEffect(() => {
+  function reset() {
     setCode(digits(6));
     setId(`anon-${digits(3)}`);
-  }, []);
+  }
 
-  const [phone, setPhone] = useState(phones.simple);
+  useEffect(() => {
+    reset();
+  }, []);
 
   const [isAnon, setAnon] = useState(true);
 
@@ -29,10 +32,11 @@ export default function Home() {
           buttonStyle="solid"
           defaultValue="true"
           onChange={({ target }) => {
+            reset();
             setAnon(target.value === "true" ? true : false);
           }}
         >
-          <Radio.Button value="true">Anon</Radio.Button>
+          <Radio.Button value="true">Anonymous</Radio.Button>
           <Radio.Button value="false">Identified</Radio.Button>
         </Radio.Group>
       </div>
@@ -59,8 +63,7 @@ export default function Home() {
           defaultValue="simple"
           onChange={({ target }) => {
             setPhone(phones[target.value as "simple" | "twilio4sf" | "flex"]);
-            setCode(digits(6));
-            setId(`anon-${digits(3)}`);
+            reset();
           }}
         >
           <Radio.Button value="simple">Simple</Radio.Button>
