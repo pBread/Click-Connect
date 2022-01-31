@@ -1,10 +1,7 @@
 import jsforce from "jsforce";
 import type { NextApiHandler } from "next";
-import Twilio from "twilio";
 
-const { ACCOUNT_SID, AUTH_TOKEN, SF_USERNAME, SF_PASSWORD, SF_TOKEN } =
-  process.env;
-const client = Twilio(ACCOUNT_SID, AUTH_TOKEN);
+const { SF_USERNAME, SF_PASSWORD, SF_TOKEN } = process.env;
 const conn = new jsforce.Connection({});
 
 const handler: NextApiHandler = async (req, res) => {
