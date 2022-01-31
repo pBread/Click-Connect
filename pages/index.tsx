@@ -73,14 +73,12 @@ export default function Home() {
       </div>
       <Divider />
       <div>
-        <Button onClick={() => axios.post("/api/identify", { code, id })}>
-          <a href={`tel:${phone},${code}#`}>Click to Call</a>
-        </Button>
-        <Button onClick={() => axios.post("/api/identify", { code, id })}>
-          <a href={`sms:${phone}&body=${isAnon ? `(${code}) ` : ""}Hello!`}>
-            Click to Text
-          </a>
-        </Button>
+        <ClickConnectButtons
+          code={code}
+          id={id}
+          isAnon={isAnon}
+          phone={phone}
+        />
       </div>
     </div>
   );
@@ -91,4 +89,26 @@ function digits(count: number) {
     str += "0123456789"[Math.floor(Math.random() * 10)];
 
   return str;
+}
+
+interface ClickConnectProps {
+  code: string;
+  id: string;
+  isAnon: boolean;
+  phone: string;
+}
+
+function ClickConnectButtons({ code, id, isAnon, phone }: ClickConnectProps) {
+  return (
+    <div>
+      <Button onClick={() => axios.post("/api/identify", { code, id })}>
+        <a href={`tel:${phone},${code}#`}>Click to Call</a>
+      </Button>
+      <Button onClick={() => axios.post("/api/identify", { code, id })}>
+        <a href={`sms:${phone}&body=${isAnon ? `(${code}) ` : ""}Hello!`}>
+          Click to Text
+        </a>
+      </Button>
+    </div>
+  );
 }
