@@ -59,27 +59,20 @@ const postHandler: NextApiHandler = async ({ body }, res) => {
   const id = body.id;
   const data = { code, id };
 
-  await Promise.all([
-    setItem(code, data),
-    // setItem(id, data)
-  ]);
-
-  res.status(200).end();
-};
-
-async function setItem(key: string, data: object) {
   await client.sync
     .services(SYNC_SVC_SID)
     .syncMaps("CodeMap")
-    .syncMapItems(key)
+    .syncMapItems(code)
     .remove()
     .catch(() => {});
 
   await client.sync
     .services(SYNC_SVC_SID)
     .syncMaps("CodeMap")
-    .syncMapItems.create({ data, key, ttl: 3600 });
-}
+    .syncMapItems.create({ data, key: code, ttl: 3600 });
+
+  res.status(200).end();
+};
 
 /****************************************************
  Route Handler
