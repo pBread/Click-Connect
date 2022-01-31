@@ -74,9 +74,7 @@ export default function Home() {
           <a href={`tel:${phone},${code}#`}>Click to Call</a>
         </Button>
         <Button onClick={() => axios.post("/api/identify", { code, id })}>
-          <a
-            href={`sms:${phone}&body=${isAnon ? `(${code}) ` : ""}Hello there!`}
-          >
+          <a href={`sms:${phone}&body=${isAnon ? `(${code}) ` : ""}Hello!`}>
             Click to Text
           </a>
         </Button>
