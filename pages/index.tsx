@@ -23,16 +23,36 @@ export default function Home() {
 
   const [phone, setPhone] = useState(phones.simple);
 
+  const [isAnon, setAnon] = useState(true);
+
   return (
     <div className={styles.wrapper}>
       <div>
-        <h5>Code</h5>
-        <h2>{code}</h2>
+        <Radio.Group
+          buttonStyle="solid"
+          defaultValue="true"
+          onChange={({ target }) => {
+            setAnon(target.value === "true" ? true : false);
+          }}
+        >
+          <Radio.Button value="true">Anon</Radio.Button>
+          <Radio.Button value="false">Identified</Radio.Button>
+        </Radio.Group>
       </div>
-      <div>
-        <h5>Identifier</h5>
-        <h2>{id}</h2>
-      </div>
+
+      {isAnon && (
+        <div>
+          <h5>Code</h5>
+          <h2>{code}</h2>
+        </div>
+      )}
+      {isAnon && (
+        <div>
+          <h5>Identifier</h5>
+          <h2>{id}</h2>
+        </div>
+      )}
+
       <Divider />
       <div>
         <h5>Integration</h5>
@@ -54,9 +74,13 @@ export default function Home() {
       <div>
         <Button onClick={() => axios.post("/api/identify", { code, id })}>
           <a href={`tel:${phone},${code}#`}>Click to Call</a>
-        </Button>{" "}
+        </Button>
         <Button onClick={() => axios.post("/api/identify", { code, id })}>
-          <a href={`sms:${phone}&body=(${code}) Hello there!`}>Click to Text</a>
+          <a
+            href={`sms:${phone}&body=${isAnon ? `(${code}) ` : ""}Hello there!`}
+          >
+            Click to Text
+          </a>
         </Button>
       </div>
     </div>
