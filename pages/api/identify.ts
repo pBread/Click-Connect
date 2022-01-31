@@ -19,7 +19,6 @@ const getIdSMS: NextApiHandler = async ({ query }, res) => {
   const contact = await conn.sobject("Contact").findOne({ Phone: query.from });
 
   if (contact) {
-    await conn.login(SF_USERNAME, `${SF_PASSWORD}${SF_TOKEN}`);
     const contact = await conn
       .sobject("Contact")
       .findOne({ Phone: query.from });
